@@ -11,6 +11,7 @@ namespace PA2 {
 
 Trie::Trie() {
 	// TODO Auto-generated constructor stub
+	//blabla
 
 }
 
