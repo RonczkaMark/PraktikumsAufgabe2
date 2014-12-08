@@ -2,7 +2,7 @@
  * Trie.h
  *
  *  Created on: 02.12.2014
- *      Author: Stefan
+ *      Author: Sau
  */
 
 #ifndef TRIE_H_
