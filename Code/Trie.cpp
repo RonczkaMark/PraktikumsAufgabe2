@@ -20,3 +20,5 @@ Trie::~Trie() {
 }
 
 } /* namespace PA2 */
+
+//bla
