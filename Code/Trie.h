@@ -13,6 +13,7 @@
 #include "list"
 #include "memory"
 #include "Node.h"
+#include "pair.h"
 
 
 namespace PA2 {
@@ -31,30 +32,29 @@ public:
 //	iterator insert(const value_type &);
 	void erase(const key_type& value);
 
-	Trie();
-	virtual ~Trie();
+	Trie(){};
 
 private:
-	 class InnerNode : public Node{
+	 class InnerNode : public  Node{
+		typedef std::list<Node *, std::allocator<E> > nodeList;
 
 	public:
 		 InnerNode(T value) {
 			this->value = value;
 		}
 
-		void addSon(_Node * newSon) {
+		void addSon(Node * newSon) {
 			nodePointerList.insert(newSon);
-		}
+		};
 		Node * getNext(){
-			std::iterator it = nodePointerList.begin();
-			it++;
+			typename nodeList::iterator it = nodePointerList.begin();
+			it ++;
 			return *it;
 		};
 
 	private:
 		T value;
-		std::allocator<E> alloc;
-		std::list<_Node*, alloc> nodePointerList;
+		nodeList nodePointerList;
 	};
 
 

@@ -11,14 +11,15 @@
 
 namespace PA2 {
 
-template<class T>
+
 class Node {
 public:
+
 	Node(Node * parent = 0) {
-		this.parent = parent;
+		this->parent = parent;
 	}
 
-	virtual ~Node();
+	virtual ~Node(){};
 
 private:
 	Node * parent;
