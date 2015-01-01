@@ -11,7 +11,6 @@
 
 namespace PA2 {
 
-
 class Node {
 public:
 

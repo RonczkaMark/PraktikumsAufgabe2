@@ -20,7 +20,7 @@ namespace PA2 {
 int main(){
 
 	std::string test ="";
-	Trie <std::string> trie;
+	Trie <std::string,char> trie;
 
 	typedef pair<std::string,std::string> GerEngPair;
 	std::string wort= "wort";

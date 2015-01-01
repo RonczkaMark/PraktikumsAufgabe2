@@ -22,8 +22,16 @@ public:
 		this->value = value;
 	};
 	virtual ~pair(){
-
 	};
+	string getKey() const {
+		return key;
+	}
+
+	void setKey(string key) {
+		this->key = key;
+	}
+
+	;
 
 private:
 	T value;
