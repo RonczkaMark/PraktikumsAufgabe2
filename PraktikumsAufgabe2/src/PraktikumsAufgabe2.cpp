@@ -20,21 +20,23 @@ int main() {
 	typedef basic_string<char> key_type; // string=basic_string<char>
 	typedef pair<const key_type, tree_type> value_type;
 
-	Trie<tree_type > trie;
-	value_type test("test","test");
-	cout << test.second<< "ende"<<endl;
+	Trie<tree_type> trie;
+	value_type test("test", "test");
+	cout << test.second << "ende" << endl;
 
-	typedef typename Trie<tree_type >::TrieIterator testIterator;
+	typedef typename Trie<tree_type>::TrieIterator testIterator;
 
-	testIterator testIter1= trie.insert(test);
-	cout<<"\n\n test ob leaf geht s \t "<<((*testIter1)->getParent()->getValue())<<endl;
-	cout<<"\n\n test ob leaf geht $ \t "<<(*(++testIter1))->getSon('$')->getValue() <<endl;
-	cout<<"test iteration $ \t"<<(*testIter1)->getValue()<<endl;
+	testIterator testIter1 = trie.insert(test);
+	cout<<"testing getData funktion value \"test\"\t"<< (*testIter1)->getData()->data();//get char array to represent the string
+	cout << "\n\n test ob leaf geht s \t "
+			<< ((*testIter1)->getParent()->getValue()) << endl;
+	cout << "test iteration $ \t" << (*testIter1)->getValue() << endl;
+	cout << "\n\n test ob leaf geht $ \t "
+			<< (*(++testIter1))->getSon('$')->getValue() << endl;
 
 
 
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	return 0;
 }
-
 
