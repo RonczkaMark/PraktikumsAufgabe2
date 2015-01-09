@@ -44,14 +44,19 @@ iterator insert(const value_type & pair) {
 
 				if (it == --wort.end()) {
 					Node * newLeaf = new Leaf(current,pair);
+					current->insert(newLeaf);
 					placeOfLeaf =iterator(newLeaf);
 
 				}
-				if (current == check) {
+				else if (current == check) {
 					Node * newNode = new InnerNode(current,*it);
 					current->insert(newNode);
 					current = newNode;
 				}
+				else{
+					current =check;
+				}
+
 			}
 
 		return placeOfLeaf;
@@ -90,7 +95,7 @@ iterator insert(const value_type & pair) {
 		;
 		virtual ~Node(){}
 
-		const Node* getParent() const {
+		Node* getParent() const {
 			return parent;
 		}
 
@@ -199,6 +204,10 @@ iterator insert(const value_type & pair) {
 		}
 		Node * operator * (){
 			return current;
+		}
+		iterator operator ++(){
+			current = current->getParent();
+			return *this;
 		}
 
 	private:

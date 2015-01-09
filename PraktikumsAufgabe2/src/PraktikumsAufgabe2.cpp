@@ -28,6 +28,8 @@ int main() {
 
 	testIterator testIter1= trie.insert(test);
 	cout<<"\n\n test ob leaf geht s \t "<<((*testIter1)->getParent()->getValue())<<endl;
+	cout<<"\n\n test ob leaf geht $ \t "<<(*(++testIter1))->getSon('$')->getValue() <<endl;
+	cout<<"test iteration $ \t"<<(*testIter1)->getValue()<<endl;
 
 
 
