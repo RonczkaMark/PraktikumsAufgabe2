@@ -2,7 +2,7 @@
  * Trie.h
  *
  *  Created on: 08.01.2015
- *      Author: Stefan
+ *      Author: Stefan Ronczka
  */
 
 #ifndef TRIE_H_
@@ -19,21 +19,23 @@ template<class T, class E = char>
 
 class Trie {
 
-
-
 public:
 	class TrieIterator;
-
 
 	typedef basic_string<E> key_type; // string=basic_string<char>
 	typedef pair<const key_type, T> value_type;
 	typedef T mapped_type;
 	typedef TrieIterator iterator;
 	typedef std::reverse_iterator<iterator> reverse_iterator;
-	bool empty() const;
 
 
-iterator insert(const value_type & pair) {
+	bool empty() const{
+		return root->empty();
+	}
+
+
+
+	iterator insert(const value_type & pair) {
 		Node * current = root;
 		key_type wort = pair.first;
 		iterator placeOfLeaf;
@@ -42,58 +44,78 @@ iterator insert(const value_type & pair) {
 				it++) {
 			Node * check = current->getSon(*it);
 
-				if (it == --wort.end()) {
-					Node * newLeaf = new Leaf(current,pair);
-					current->insert(newLeaf);
-					placeOfLeaf =iterator(newLeaf);
-
-				}
-				else if (current == check) {
-					Node * newNode = new InnerNode(current,*it);
-					current->insert(newNode);
-					current = newNode;
-				}
-				else{
-					current =check;
-				}
-
+			if (current == check) {
+				Node * newNode = new InnerNode(current, *it);
+				current->insert(newNode);
+				current = newNode;
+			} else {
+				current = check;
 			}
+
+		}
+		if (current->getSon('$') == current) {
+					Node * newLeaf = new Leaf(current, pair);
+					current->insert(newLeaf);
+					placeOfLeaf = iterator(newLeaf);
+
+				}
 
 		return placeOfLeaf;
 
-
 	}
 
-	void erase(const key_type& value);
+	void erase(const key_type& value){
+		iterator it = this->find(value);
+		if(root != *it){
+			Node * curPar = (*it).getParent();
+
+		}
+	}
 
 	void clear(); // erase all
 	iterator lower_bound(const key_type& testElement); // first element >= testElement
 	iterator upper_bound(const key_type& testElement); // first element > testElement
-	iterator find(const key_type& testElement); // first element == testElement
-	iterator begin(); // returns end() if not found
-	iterator end();
+
+	iterator find(const key_type& testElement) {
+
+		iterator found = end();
+		Node * current = root;
+
+
+		for(typename key_type::const_iterator it = testElement.begin();it != testElement.end();it++) {
+			current = current->getSon(*it);
+
+		}
+		if (current = current->getSon('$')) {
+			found = iterator(current);
+		}
+
+		return found;
+	} // first element == testElement
+
+	iterator begin(){
+
+	}; // returns end() if not found
+	iterator end() {
+		return iterator(root);
+	}
 	reverse_iterator rbegin();
 	reverse_iterator rend();
 
-
-
-
-	Trie(){
-		root = new InnerNode(0,'0');
+	Trie() {
+		root = new InnerNode(0, '0');
 	}
-
-
-
 
 	class Node {
 	public:
 
-		Node(Node * par,E val) :
+		Node(Node * par, E val) :
 				value(val), parent(par) {
 
 		}
 		;
-		virtual ~Node(){}
+		virtual ~Node() {
+		}
 
 		Node* getParent() const {
 			return parent;
@@ -111,8 +133,9 @@ iterator insert(const value_type & pair) {
 //			this->value = value;
 //		}
 		virtual Node * getSon(const E)=0; //returns the Node which contains the searched value else this get back
-		virtual const T * getData()const  =0;	//returns the saved value
+		virtual const T getData() const =0;	//returns the saved value
 		virtual void insert(Node * newSon) = 0; //for inserting a new Node
+		virtual bool empty()const  = 0;
 
 	private:
 		Node * parent;
@@ -124,8 +147,8 @@ iterator insert(const value_type & pair) {
 	public:
 		typedef std::list<Node *> listsetting;
 
-		InnerNode(Node * par =0,E val ='0') :
-				Node(par,val) {
+		InnerNode(Node * par = 0, E val = '0') :
+				Node(par, val) {
 		}
 		~InnerNode() {
 		}
@@ -147,7 +170,7 @@ iterator insert(const value_type & pair) {
 			}
 		}
 
-		Node * getSon(const E searchedValue){
+		Node * getSon(const E searchedValue) {
 
 			for (typename listsetting::iterator it = nodeList.begin();
 					it != nodeList.end(); it++) {
@@ -159,10 +182,10 @@ iterator insert(const value_type & pair) {
 
 		}
 
-		bool empty() {
+		bool empty() const{
 			return nodeList.empty();
 		}
-		const T * getData()const{
+		const T  getData() const {
 			return NULL;
 		}
 
@@ -171,41 +194,46 @@ iterator insert(const value_type & pair) {
 
 	};
 
-	class Leaf:public Node{
+	class Leaf: public Node {
 	public:
-		Leaf(Node * par,const value_type data):Node(par,'$'){
+		Leaf(Node * par, const value_type data) :
+				Node(par, '$') {
 
-			this->data = & data.second;
+			this->data = data.second;
 
 		}
-		Node * getSon(const E searchedValue){
+		Node * getSon(const E searchedValue) {
 			return this;
 		}
 
-		const T * getData()const{
+		const T  getData() const {
 			return data;
 		}
-		void insert(Node * newSon) {}
-
+		void insert(Node * newSon) {
+		}
+		bool empty() const{
+			return true;
+		}
 
 	private:
 
-		const T * data;
+		T data;
 	};
 
 	class TrieIterator {
-	public :
-		TrieIterator(){
+	public:
+		TrieIterator() {
 			current = 0;
 		}
 
-		TrieIterator(Node * cur):current(cur){
+		TrieIterator(Node * cur) :
+				current(cur) {
 
 		}
-		Node * operator * (){
+		Node * operator *() {
 			return current;
 		}
-		iterator operator ++(){
+		iterator operator ++() {
 			current = current->getParent();
 			return *this;
 		}
@@ -215,8 +243,7 @@ iterator insert(const value_type & pair) {
 
 	};
 
-
-	private:
+private:
 	Node * root;
 };
 
