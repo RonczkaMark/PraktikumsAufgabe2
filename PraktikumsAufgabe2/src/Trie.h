@@ -48,29 +48,43 @@ public:
 			if (current->getValue() == check->getValue()) {
 				Node * newNode = new InnerNode(current, *it);
 				current->insert(newNode);
-				current = dynamic_cast<InnerNode *> (newNode);
+				cout<<newNode->getValue()<<"\t";
+				current = static_cast<InnerNode *> (newNode);
 			} else {
-				current =  dynamic_cast<InnerNode *> (check);
+				current =  static_cast<InnerNode *> (check);
 			}
 
 		}
 		if (current->getSon('$') == current) {
 					Node * newLeaf = new Leaf(current, pair);
 					current->insert(newLeaf);
+					cout<<newLeaf->getValue()<<"\t";
 					placeOfLeaf = iterator(newLeaf);
 
 				}
 
+		cout<<endl;
 		return placeOfLeaf;
 
 	}
 
 	void erase(const key_type& value){
 		iterator it = this->find(value);
-		if(root != *it){
-			Node * curPar = (*it).getParent();
 
-		}
+		Node * current= (*it);
+		InnerNode * NextInner = static_cast<InnerNode *>(current->getParent());
+		NextInner->remove(current);
+
+		delete current;
+
+			while(NextInner->empty() && NextInner != root){
+				InnerNode * Copy =  static_cast<InnerNode *>(NextInner->getParent());
+				cout<<"nächster Value \t"<<NextInner->getValue()<<endl;
+				Copy->remove(NextInner);
+				delete NextInner;
+				NextInner = Copy ;
+
+			}
 	}
 
 	void clear(); // erase all
@@ -84,11 +98,14 @@ public:
 
 
 		for(typename key_type::const_iterator it = testElement.begin();it != testElement.end();it++) {
-			current = dynamic_cast<InnerNode *> (current->getSon(*it));
+			current = static_cast<InnerNode *> (current->getSon(*it));
+			cout<<"werte \t"<<current->getValue()<<endl;
 
 		}
-		if (current == current->getSon('$')) {
-			found = iterator(current);
+
+		if (current != current->getSon('$')) {
+			found = iterator(current->getSon('$'));
+			cout<<"werte \t"<<current->getSon('$')->getValue()<<endl;
 		}
 
 		return found;
@@ -194,6 +211,11 @@ public:
 
 		bool empty() const{
 			return nodeList.empty();
+		}
+
+		void remove(Node * node){
+			nodeList.remove(node);
+
 		}
 	private:
 		listsetting nodeList;
