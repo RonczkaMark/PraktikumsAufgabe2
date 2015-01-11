@@ -167,6 +167,7 @@ public:
 	class InnerNode: public Node {
 
 	public:
+		friend class TrieIterator;
 		typedef std::list<Node *> listsetting;
 
 		InnerNode(Node * par = 0, E val = '0') :
@@ -208,6 +209,15 @@ public:
 		Node * getLeft(){
 			return *(nodeList.begin());
 		}
+		typename listsetting::iterator getRight(){
+			cout<<nodeList.size();
+//			if(nodeList.size()>2){
+//			return ++(nodeList.begin());
+//			}
+
+				return nodeList.end();
+
+		}
 
 		bool empty() const{
 			return nodeList.empty();
@@ -243,6 +253,7 @@ public:
 
 	class TrieIterator {
 	public:
+		friend class InnerNode;
 		TrieIterator() {
 			current = 0;
 		}
@@ -255,17 +266,46 @@ public:
 			return current;
 		}
 		iterator operator ++() {
-			current = current->getParent();
+			InnerNode * walkNode =  static_cast <InnerNode * >(current);
+
+			//ist blatt
+			if(current->getValue() == '$' ){
+				current = current->getParent();
+			}
+			//hat rechte Nodes
+			else if(walkNode->nodeList){
+					current = current->getParent();
+
+
+			}
+			else if(currentIter != walkNode->getRight()){
+				currentIter = walkNode->getRight();
+					current = *currentIter ;
+			}
+//			else{
+//				current= *(++(currentIter));
+//			}
+
+
+
+			cout<<"mal ein test für ++operator \t" << current->getValue() <<endl;
 			return *this;
 		}
 
 	private:
+		typename InnerNode::listsetting::iterator currentIter;
 		Node * current;
+
+
 
 	};
 
 private:
 	InnerNode * root;
+
+
+
+
 };
 
 } /* namespace PA2 */

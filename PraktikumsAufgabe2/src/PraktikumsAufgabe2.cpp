@@ -29,10 +29,6 @@ int main() {
 	testIterator testIter1 = trie.insert(test);
 
 	cout << "test iteration $ \t" << (*testIter1)->getValue() << endl;
-	cout << "\n\n test ob leaf geht test \t "
-			<< static_cast<typename Trie<tree_type>::Leaf *>((static_cast<typename Trie<
-					tree_type>::InnerNode *>(*(++testIter1))->getSon('$')))->getData()
-			<< endl;
 
 	const basic_string<char> testString = "blablafuckingbla";
 	testIter1 = trie.find(testString);
@@ -42,7 +38,13 @@ int main() {
 			<< endl;
 
 	trie.erase(testString);
-	cout<< "test the erease method \t"<< trie.empty();
+	cout<< "test the erease method \t"<< trie.empty()<<endl;
+	++testIter1;
+	++testIter1;
+	++testIter1;
+	++testIter1;
+	++testIter1;
+
 
 
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
