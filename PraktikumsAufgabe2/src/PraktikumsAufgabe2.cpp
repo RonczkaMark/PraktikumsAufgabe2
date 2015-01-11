@@ -27,19 +27,18 @@ int main() {
 	typedef typename Trie<tree_type>::TrieIterator testIterator;
 
 	testIterator testIter1 = trie.insert(test);
-	cout<<"testing getData funktion value \"test\"\t"<< (*testIter1)->getData();//get char array to represent the string
-	cout << "\n\n test ob leaf geht t \t "
-			<< ((*testIter1)->getParent()->getValue()) << endl;
+
 	cout << "test iteration $ \t" << (*testIter1)->getValue() << endl;
-	cout << "\n\n test ob leaf geht $ \t "
-			<< (*(++testIter1))->getSon('$')->getValue() << endl;
+	cout << "\n\n test ob leaf geht test \t "
+			<< dynamic_cast<typename Trie<tree_type>::Leaf *>((dynamic_cast<typename Trie<
+					tree_type>::InnerNode *>(*(++testIter1))->getSon('$')))->getData()
+			<< endl;
 
 	const basic_string<char> testString = "test";
 	testIter1 = trie.find(testString);
-	cout<<"test if the find mehtod is working right result test\t"<<(*testIter1)->getData()<<endl;
+	cout<<"test if the find mehtod is working right result test\t"<<dynamic_cast <typename Trie<tree_type>::Leaf *>((dynamic_cast<typename Trie<tree_type>::InnerNode * >(*testIter1)))->getData()<<endl;
 
-
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
-	return 0;
-}
+					cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+					return 0;
+				}
 

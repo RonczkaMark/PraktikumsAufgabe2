@@ -21,6 +21,7 @@ class Trie {
 
 public:
 	class TrieIterator;
+	class InnerNode;
 
 	typedef basic_string<E> key_type; // string=basic_string<char>
 	typedef pair<const key_type, T> value_type;
@@ -36,7 +37,7 @@ public:
 
 
 	iterator insert(const value_type & pair) {
-		Node * current = root;
+		InnerNode * current = root;
 		key_type wort = pair.first;
 		iterator placeOfLeaf;
 
@@ -44,12 +45,12 @@ public:
 				it++) {
 			Node * check = current->getSon(*it);
 
-			if (current == check) {
+			if (current->getValue() == check->getValue()) {
 				Node * newNode = new InnerNode(current, *it);
 				current->insert(newNode);
-				current = newNode;
+				current = dynamic_cast<InnerNode *> (newNode);
 			} else {
-				current = check;
+				current =  dynamic_cast<InnerNode *> (check);
 			}
 
 		}
@@ -79,14 +80,14 @@ public:
 	iterator find(const key_type& testElement) {
 
 		iterator found = end();
-		Node * current = root;
+		InnerNode * current = root;
 
 
 		for(typename key_type::const_iterator it = testElement.begin();it != testElement.end();it++) {
-			current = current->getSon(*it);
+			current = dynamic_cast<InnerNode *> (current->getSon(*it));
 
 		}
-		if (current = current->getSon('$')) {
+		if (current == current->getSon('$')) {
 			found = iterator(current);
 		}
 
@@ -94,7 +95,11 @@ public:
 	} // first element == testElement
 
 	iterator begin(){
-
+		InnerNode current = root;
+		while(root->getLeft()){
+			current = current.getLeft();
+		}
+		return iterator(current);
 	}; // returns end() if not found
 	iterator end() {
 		return iterator(root);
@@ -132,10 +137,10 @@ public:
 //		void setValue(const E value) {
 //			this->value = value;
 //		}
-		virtual Node * getSon(const E)=0; //returns the Node which contains the searched value else this get back
-		virtual const T getData() const =0;	//returns the saved value
-		virtual void insert(Node * newSon) = 0; //for inserting a new Node
-		virtual bool empty()const  = 0;
+//		virtual Node * getSon(const E)=0; //returns the Node which contains the searched value else this get back
+//		virtual const T getData() const =0;	//returns the saved value
+//		virtual void insert(Node * newSon) = 0; //for inserting a new Node
+//		virtual bool empty()const  = 0;
 
 	private:
 		Node * parent;
@@ -183,13 +188,13 @@ public:
 
 		}
 
+		Node * getLeft(){
+			return *(nodeList.begin());
+		}
+
 		bool empty() const{
 			return nodeList.empty();
 		}
-		const T  getData() const {
-			return NULL;
-		}
-
 	private:
 		listsetting nodeList;
 
@@ -203,18 +208,11 @@ public:
 			this->data = data.second;
 
 		}
-		Node * getSon(const E searchedValue) {
-			return this;
-		}
 
 		const T  getData() const {
 			return data;
 		}
-		void insert(Node * newSon) {
-		}
-		bool empty() const{
-			return true;
-		}
+
 
 	private:
 
@@ -245,7 +243,7 @@ public:
 	};
 
 private:
-	Node * root;
+	InnerNode * root;
 };
 
 } /* namespace PA2 */
