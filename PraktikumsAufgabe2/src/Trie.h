@@ -154,11 +154,12 @@ public:
 		}
 
 		void insert(Node * newSon) {
+			typename listsetting::iterator inSort = nodeList.begin();
 			if (nodeList.empty()) {
-				nodeList.push_front(newSon);
+				nodeList.insert(inSort, newSon);
 			} else {
 
-				typename listsetting::iterator inSort;
+
 				for (typename listsetting::iterator it = nodeList.begin();
 						it != nodeList.end(); it++) {
 					if (newSon->getValue() > (*it)->getValue()) {
