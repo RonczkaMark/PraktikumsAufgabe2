@@ -30,12 +30,9 @@ public:
 	typedef TrieIterator iterator;
 	typedef std::reverse_iterator<iterator> reverse_iterator;
 
-
-	bool empty() const{
+	bool empty() const {
 		return root->empty();
 	}
-
-
 
 	iterator insert(const value_type & pair) {
 		InnerNode * current = root;
@@ -49,43 +46,43 @@ public:
 			if (current->getValue() == check->getValue()) {
 				Node * newNode = new InnerNode(current, *it);
 				current->insert(newNode);
-				cout<<newNode->getValue()<<"\t";
-				current = static_cast<InnerNode *> (newNode);
+				cout << newNode->getValue() << "\t";
+				current = static_cast<InnerNode *>(newNode);
 			} else {
-				current =  static_cast<InnerNode *> (check);
+				current = static_cast<InnerNode *>(check);
 			}
 
 		}
 		if (current->getSon('$') == current) {
-					Node * newLeaf = new Leaf(current, pair);
-					current->insert(newLeaf);
-					cout<<newLeaf->getValue()<<"\t";
-					placeOfLeaf = iterator(newLeaf);
+			Node * newLeaf = new Leaf(current, pair);
+			current->insert(newLeaf);
+			cout << newLeaf->getValue() << "\t";
+			placeOfLeaf = iterator(newLeaf);
 
-				}
+		}
 
-		cout<<endl;
+		cout << endl;
 		return placeOfLeaf;
 
 	}
 
-	void erase(const key_type& value){
+	void erase(const key_type& value) {
 		iterator it = this->find(value);
 
-		Node * current= (*it);
+		Node * current = (*it);
 		InnerNode * NextInner = static_cast<InnerNode *>(current->getParent());
 		NextInner->remove(current);
 
 		delete current;
 
-			while(NextInner->empty() && NextInner != root){
-				InnerNode * Copy =  static_cast<InnerNode *>(NextInner->getParent());
-				cout<<"nächster Value \t"<<NextInner->getValue()<<endl;
-				Copy->remove(NextInner);
-				delete NextInner;
-				NextInner = Copy ;
+		while (NextInner->empty() && NextInner != root) {
+			InnerNode * Copy = static_cast<InnerNode *>(NextInner->getParent());
+			cout << "nächster Value \t" << NextInner->getValue() << endl;
+			Copy->remove(NextInner);
+			delete NextInner;
+			NextInner = Copy;
 
-			}
+		}
 	}
 
 	void clear(); // erase all
@@ -97,34 +94,33 @@ public:
 		iterator found = end();
 		InnerNode * current = root;
 
+		for (typename key_type::const_iterator it = testElement.begin();
+				it != testElement.end(); it++) {
 
-		for(typename key_type::const_iterator it = testElement.begin();it != testElement.end();it++) {
-			current = static_cast<InnerNode *> (current->getSon(*it));
-			cout<<"werte \t"<<current->getValue()<<endl;
+			current = static_cast<InnerNode *>(current->getSon(*it));
+			cout << "werte \t" << current->getValue() << endl;
 
 		}
 
 		if (current != current->getSon('$')) {
 			found = iterator(current->getSon('$'));
-			cout<<"werte \t"<<current->getSon('$')->getValue()<<endl;
+			cout << "werte \t" << current->getSon('$')->getValue() << endl;
 		}
 
 		return found;
 	} // first element == testElement
 
-	iterator begin()
-	{
+	iterator begin() {
 		InnerNode * current = root;
-		while(current->getLeft()->getValue() != '$'){
-			current = static_cast<InnerNode * >(current->getLeft());
-	}
+		while (current->getLeft()->getValue() != '$') {
+			current = static_cast<InnerNode *>(current->getLeft());
+		}
 
 		return iterator(current->getLeft());
 	} // returns end() if not found
 	iterator end() {
 		return iterator(root);
 	}
-
 
 	Trie() {
 		root = new InnerNode(0, '0');
@@ -184,7 +180,6 @@ public:
 				nodeList.insert(inSort, newSon);
 			} else {
 
-
 				for (typename listsetting::iterator it = nodeList.begin();
 						it != nodeList.end(); it++) {
 					if (newSon->getValue() > (*it)->getValue()) {
@@ -208,23 +203,30 @@ public:
 
 		}
 
-		Node * getLeft(){
+		Node * getLeft() {
 			return *(nodeList.begin());
 		}
-
-		Node * getRight(Node * node){
-			if(node == 0){
+		Node * getRight() {
+			if (nodeList.size() >= 2) {
+				return *(++(nodeList.begin()));
+			} else {
 				return this;
 			}
-				return getSon(node->getValue());
+		}
+
+		Node * getRight(Node * node) {
+			if (node == 0) {
+				return this;
+			}
+			return getSon(node->getValue());
 
 		}
 
-		bool empty() const{
+		bool empty() const {
 			return nodeList.empty();
 		}
 
-		void remove(Node * node){
+		void remove(Node * node) {
 			nodeList.remove(node);
 
 		}
@@ -242,10 +244,9 @@ public:
 
 		}
 
-		const T  getData() const {
+		const T getData() const {
 			return data;
 		}
-
 
 	private:
 
@@ -261,47 +262,54 @@ public:
 
 		TrieIterator(Node * cur) :
 				current(cur) {
+//			Node * present =cur;
+//			do {
+//				Node * present = cur->getParent();
+//				nodeStack.push_back(present);
+//			} while (present);
 
 		}
 		Node * operator *() {
 			return current;
 		}
 		iterator operator ++() {
-			InnerNode * walkNode =  static_cast <InnerNode * >(current);
+			InnerNode * walkNode = static_cast<InnerNode *>(current);
 
 			//ist blatt
-			if(current->getValue() == '$' ){
-				current = current->getParent();
+//			if (current->getValue() == '$' || walkNode->getRight() == current) {
+//
+//				current = nodeStack.front();
+//				nodeStack.pop_front();
+//
+//			}
 
-			}
+			current = walkNode->getParent();
+//
+//			else if(nodeStack.front() == current->getParent()){
+//				if(current != walkNode->getLeft()){
+//					nodeStack.push_front(current);
+//					current = walkNode->getLeft();
+//
+//				}
 
-			else if(current == walkNode->getRight(prevRight)){
-				current = current->getParent();
-			}
 
-			else{
-				prevRight = walkNode->getRight(prevRight);
-				current = prevRight;
-			}
 
-			cout<<"mal ein test für ++operator \t" << current->getValue() <<endl;
+
+			cout << "mal ein test für ++operator \t" << current->getValue()
+					<< endl;
 			return *this;
 		}
 
 	private:
 		typename InnerNode::listsetting::iterator currentIter;
 		Node * current;
+		list<Node *> nodeStack;
 		Node * prevRight = NULL;
-
-
 
 	};
 
 private:
 	InnerNode * root;
-
-
-
 
 };
 
