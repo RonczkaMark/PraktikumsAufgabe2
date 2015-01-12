@@ -10,6 +10,7 @@
 
 #include <utility>
 #include <list>
+#include <stack>
 
 namespace PA2 {
 
@@ -111,18 +112,19 @@ public:
 		return found;
 	} // first element == testElement
 
-	iterator begin(){
-		InnerNode current = root;
-		while(root->getLeft()){
-			current = current.getLeft();
-		}
-		return iterator(current);
-	}; // returns end() if not found
+	iterator begin()
+	{
+		InnerNode * current = root;
+		while(current->getLeft()->getValue() != '$'){
+			current = static_cast<InnerNode * >(current->getLeft());
+	}
+
+		return iterator(current->getLeft());
+	} // returns end() if not found
 	iterator end() {
 		return iterator(root);
 	}
-	reverse_iterator rbegin();
-	reverse_iterator rend();
+
 
 	Trie() {
 		root = new InnerNode(0, '0');
@@ -209,13 +211,12 @@ public:
 		Node * getLeft(){
 			return *(nodeList.begin());
 		}
-		typename listsetting::iterator getRight(){
-			cout<<nodeList.size();
-//			if(nodeList.size()>2){
-//			return ++(nodeList.begin());
-//			}
 
-				return nodeList.end();
+		Node * getRight(Node * node){
+			if(node == 0){
+				return this;
+			}
+				return getSon(node->getValue());
 
 		}
 
@@ -271,22 +272,17 @@ public:
 			//ist blatt
 			if(current->getValue() == '$' ){
 				current = current->getParent();
-			}
-			//hat rechte Nodes
-			else if(walkNode->nodeList){
-					current = current->getParent();
-
 
 			}
-			else if(currentIter != walkNode->getRight()){
-				currentIter = walkNode->getRight();
-					current = *currentIter ;
+
+			else if(current == walkNode->getRight(prevRight)){
+				current = current->getParent();
 			}
-//			else{
-//				current= *(++(currentIter));
-//			}
 
-
+			else{
+				prevRight = walkNode->getRight(prevRight);
+				current = prevRight;
+			}
 
 			cout<<"mal ein test für ++operator \t" << current->getValue() <<endl;
 			return *this;
@@ -295,6 +291,7 @@ public:
 	private:
 		typename InnerNode::listsetting::iterator currentIter;
 		Node * current;
+		Node * prevRight = NULL;
 
 
 

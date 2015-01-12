@@ -21,29 +21,42 @@ int main() {
 	typedef pair<const key_type, tree_type> value_type;
 
 	Trie<tree_type> trie;
-	const value_type test("blablafuckingbla", "testasdf");
+	const value_type test("abcd", "test1");
+	const value_type test2("abcdef","test2");
+
 	cout << test.second << "ende" << endl;
 
 	typedef typename Trie<tree_type>::TrieIterator testIterator;
 
 	testIterator testIter1 = trie.insert(test);
+	testIterator testIter2 = trie.insert(test2);
 
-	cout << "test iteration $ \t" << (*testIter1)->getValue() << endl;
+	const basic_string<char> testString = "abcd";
+	const basic_string<char> testString2 = "abcdef";
 
-	const basic_string<char> testString = "blablafuckingbla";
-	testIter1 = trie.find(testString);
-	cout << "test $" << (*testIter1)->getValue() << endl;
-	cout << "test if the find mehtod is working right result test\t"
-			<< static_cast<typename Trie<tree_type>::Leaf *>(*testIter1)->getData()
-			<< endl;
+	testIter1 = trie.begin();
+	cout<<"test2"<<static_cast<typename Trie<tree_type>::Leaf *>(*testIter1)->getData()<<endl;
+	++testIter2;
+	++testIter2;
+	cout<<static_cast<typename Trie<tree_type>::InnerNode *>(*testIter2)->getLeft()->getValue();
+	trie.erase(testString2);
+	trie.find(testString);
+	testIter1 = trie.begin();
 
-	trie.erase(testString);
-	cout<< "test the erease method \t"<< trie.empty()<<endl;
+	cout<<"test 1"<<static_cast<typename Trie<tree_type>::Leaf *>((*testIter1))->getData()<<endl;
+	testIter1 =trie.insert(test2);
+	cout<<"test 2"<<static_cast<typename Trie<tree_type>::Leaf *>((*testIter1))->getData()<<endl;
+
 	++testIter1;
 	++testIter1;
 	++testIter1;
 	++testIter1;
-	++testIter1;
+
+
+
+
+
+
 
 
 
