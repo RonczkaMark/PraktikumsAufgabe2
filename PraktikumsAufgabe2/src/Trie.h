@@ -44,6 +44,7 @@ public:
 				it++) {
 			Node * check = current->getSon(*it);
 
+			//checks if the current has an son
 			if (current->getValue() == check->getValue()) {
 				Node * newNode = new InnerNode(current, *it);
 				current->insert(newNode);
@@ -54,6 +55,7 @@ public:
 			}
 
 		}
+		//test if it has an leaf
 		if (current->getSon('$') == current) {
 			Node * newLeaf = new Leaf(current, pair);
 			current->insert(newLeaf);
@@ -77,6 +79,8 @@ public:
 
 		delete current;
 
+
+		//while the nodes has no sons and its not the root
 		while (NextInner->empty() && NextInner != root) {
 			InnerNode * Copy = static_cast<InnerNode *>(NextInner->getParent());
 			cout << "nächster Value \t" << NextInner->getValue() << endl;
