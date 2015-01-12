@@ -33,6 +33,7 @@ public:
 	bool empty() const {
 		return root->empty();
 	}
+	//this method is inserting an new value pair
 
 	iterator insert(const value_type & pair) {
 		InnerNode * current = root;
@@ -66,6 +67,7 @@ public:
 
 	}
 
+	//this methode is erase the pair with the key_type
 	void erase(const key_type& value) {
 		iterator it = this->find(value);
 
@@ -85,15 +87,19 @@ public:
 		}
 	}
 
+
 	void clear(); // erase all
 	iterator lower_bound(const key_type& testElement); // first element >= testElement
 	iterator upper_bound(const key_type& testElement); // first element > testElement
 
+
+	//find the pair with the key_type testelement
 	iterator find(const key_type& testElement) {
 
 		iterator found = end();
 		InnerNode * current = root;
 
+		//searches an node for each letter
 		for (typename key_type::const_iterator it = testElement.begin();
 				it != testElement.end(); it++) {
 
@@ -102,6 +108,7 @@ public:
 
 		}
 
+		//test that the last is an leaf
 		if (current != current->getSon('$')) {
 			found = iterator(current->getSon('$'));
 			cout << "werte \t" << current->getSon('$')->getValue() << endl;
@@ -111,6 +118,7 @@ public:
 	} // first element == testElement
 
 	iterator begin() {
+		//gives the lefttest node
 		InnerNode * current = root;
 		while (current->getLeft()->getValue() != '$') {
 			current = static_cast<InnerNode *>(current->getLeft());
@@ -118,6 +126,7 @@ public:
 
 		return iterator(current->getLeft());
 	} // returns end() if not found
+	//give the root
 	iterator end() {
 		return iterator(root);
 	}
@@ -126,6 +135,7 @@ public:
 		root = new InnerNode(0, '0');
 	}
 
+	//ABC for the tree Node structur
 	class Node {
 	public:
 
@@ -141,27 +151,19 @@ public:
 			return parent;
 		}
 
-//		void setParent(const Node* parent) {
-//			this->parent = parent;
-//		}
 
 		E getValue() const {
 			return value;
 		}
 
-//		void setValue(const E value) {
-//			this->value = value;
-//		}
-//		virtual Node * getSon(const E)=0; //returns the Node which contains the searched value else this get back
-//		virtual const T getData() const =0;	//returns the saved value
-//		virtual void insert(Node * newSon) = 0; //for inserting a new Node
-//		virtual bool empty()const  = 0;
+
 
 	private:
 		Node * parent;
 		E value;
 	};
 
+	//the nodes contains an list of sub nodes
 	class InnerNode: public Node {
 
 	public:
@@ -191,6 +193,7 @@ public:
 			}
 		}
 
+		// searched an son in the list with the seachedValue return s this if nothing is found
 		Node * getSon(const E searchedValue) {
 
 			for (typename listsetting::iterator it = nodeList.begin();
@@ -203,9 +206,13 @@ public:
 
 		}
 
+		//return the in the list left Node
 		Node * getLeft() {
 			return *(nodeList.begin());
 		}
+
+		//return s an right node if there is one
+		//if not it return s itself
 		Node * getRight() {
 			if (nodeList.size() >= 2) {
 				return *(++(nodeList.begin()));
@@ -214,6 +221,7 @@ public:
 			}
 		}
 
+		//should find an next right node if not it returns itself
 		Node * getRight(Node * node) {
 			if (node == 0) {
 				return this;
@@ -221,11 +229,12 @@ public:
 			return getSon(node->getValue());
 
 		}
-
+		// return true if the nodelist is empty
 		bool empty() const {
 			return nodeList.empty();
 		}
 
+		//removes the node s from the list
 		void remove(Node * node) {
 			nodeList.remove(node);
 
@@ -235,6 +244,7 @@ public:
 
 	};
 
+	//sub class for the translation words or other template arg Es
 	class Leaf: public Node {
 	public:
 		Leaf(Node * par, const value_type data) :
@@ -244,6 +254,8 @@ public:
 
 		}
 
+
+		//return the data
 		const T getData() const {
 			return data;
 		}
@@ -253,12 +265,14 @@ public:
 		T data;
 	};
 
+	//should traverse through the tree
 	class TrieIterator {
 	public:
 		friend class InnerNode;
 		TrieIterator() {
 			current = 0;
 		}
+
 
 		TrieIterator(Node * cur) :
 				current(cur) {
@@ -269,6 +283,7 @@ public:
 //			} while (present);
 
 		}
+		//return the carried node
 		Node * operator *() {
 			return current;
 		}
@@ -309,6 +324,8 @@ public:
 	};
 
 private:
+
+	//the node the tree starts with
 	InnerNode * root;
 
 };

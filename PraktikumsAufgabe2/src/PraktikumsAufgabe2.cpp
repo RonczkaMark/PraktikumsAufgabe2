@@ -37,15 +37,21 @@ int main() {
 	const basic_string<char> testString2 = "abcdef";
 	const basic_string<char> testString3 = "abcdhi";
 
+	//test the begin method
 	testIter1 = trie.begin();
+	//testing if the begin node is an leaf
 	cout<<"test2"<<static_cast<typename Trie<tree_type>::Leaf *>(*testIter1)->getData()<<endl;
+	//testing iteration funktion
 	++testIter2;
 	++testIter2;
 	cout<<static_cast<typename Trie<tree_type>::InnerNode *>(*testIter2)->getLeft()->getValue();
+	//testing the erase funktion
 	trie.erase(testString2);
+	//test the find funktion
 	trie.find(testString);
 	testIter1 = trie.begin();
 
+	//controlling the if the words insearted successfully
 	cout<<"test 1"<<static_cast<typename Trie<tree_type>::Leaf *>((*testIter1))->getData()<<endl;
 	testIter1 =trie.insert(test2);
 	cout<<"test 2"<<static_cast<typename Trie<tree_type>::Leaf *>((*testIter1))->getData()<<endl;
@@ -53,6 +59,8 @@ int main() {
 	testIter1 = trie.begin();
 
 
+
+// subprogramm to use the trie
 
 
 	Trie<tree_type> trie2;
